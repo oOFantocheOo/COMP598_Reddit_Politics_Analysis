@@ -29,20 +29,36 @@ def cleanData(data):
 
     titles=[]
     authors=[]
-    titles=list(map(lambda post:post['data']['title'],content))
-    authors=list(map(lambda post:post['data']['author'],content))
+    for c in content:
+        titles.append(c['data']['title'])
+        authors.append(c['data']['name'])
+
     return [titles,authors]
 
 def filterData(titles,authors):
     removeIndex=[]
+
     for index in range(len(titles)):
         if not (('Trump' in titles[index]) or ('Biden' in titles[index])):
             removeIndex.append(index)
 
-    titles=[t for t in titles if titles.index(t) not in removeIndex]
-    authors=[a for a in authors if authors.index(a) not in removeIndex]
+    titleList=[]
+    nameList=[]
+    for i in range(1000):
+        if i not in removeIndex:
+            titleList.append(titles[i])
+            nameList.append(authors[i])
+        
+    return [titleList,nameList]
 
-    return [titles,index]
+def writeData(titles,authors,fileOut):
+    ## create dataframe for Names and Titles
+    df=pd.DataFrame(columns=['Name','Title','Coding'])
+    df['Name']=authors
+    df['Title']=titles
+    df['Coding']=' '
+    ## save in tsv
+    df.to_csv(fileOut, index=False)
 
 
 def main():
@@ -56,12 +72,13 @@ def main():
     #file2=args.f2
     #file3=args.f3
     #fileOut=args.fileOut
+    ############################## testing
+
     file1='data/20201127_conservative.json'
-    file2='data/20201127_conservative.json'
-    file3='data/20201127_conservative.json'
-
-    fileOut='data/conservative_cleaned.json'
-
+    file2='data/20201128_conservative.json'
+    file3='data/20201129_conservative.json'
+    fileOut='data/conservative_cleaned.csv'
+############################################
 
     ## data = merged contents over 3 days
     data=[]
@@ -78,17 +95,15 @@ def main():
     case sensitive 
     '''
 
-    [titles,index]=filterData(titles,authors)
-    print(len(titles))
+    [titles,authors]=filterData(titles,authors)
+
+
+    writeData(titles,authors,fileOut)
 
 
 
 
-    ## write to output
-    # with open(fileOut, 'w') as f:
-    #     for d in data:
-    #         json.dump(d, f)
-    #         f.write('\n')
+
 
 
 
