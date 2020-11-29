@@ -1,0 +1,101 @@
+# input json file,  return cleaned json file
+import json
+import argparse
+import pandas as pd
+import random
+
+def merge(file,data):    
+    f=open(file)
+    while True:
+        line=f.readline()
+        try:
+            data.append(json.loads(line))
+
+        except Exception:
+            pass
+            ## skip invalid json format
+        #break if eof
+        if not line:
+            break
+    f.close
+    return data
+
+def cleanData(data):
+    #selecting contents to output
+    content=[]
+    randonLine=random.sample(range(1, len(data)), 1000)
+    for i in randonLine:
+        content.append(data[i])
+
+    titles=[]
+    authors=[]
+    titles=list(map(lambda post:post['data']['title'],content))
+    authors=list(map(lambda post:post['data']['author'],content))
+    return [titles,authors]
+
+def filterData(titles,authors):
+    removeIndex=[]
+    for index in range(len(titles)):
+        if not (('Trump' in titles[index]) or ('Biden' in titles[index])):
+            removeIndex.append(index)
+
+    titles=[t for t in titles if titles.index(t) not in removeIndex]
+    authors=[a for a in authors if authors.index(a) not in removeIndex]
+
+    return [titles,index]
+
+
+def main():
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument('f1')
+    #parser.add_argument('f2')
+    #parser.add_argument('f3')    
+    #parser.add_argument('fileOut')
+    #args = parser.parse_args()
+    #file1=args.f1
+    #file2=args.f2
+    #file3=args.f3
+    #fileOut=args.fileOut
+    file1='data/20201127_conservative.json'
+    file2='data/20201127_conservative.json'
+    file3='data/20201127_conservative.json'
+
+    fileOut='data/conservative_cleaned.json'
+
+
+    ## data = merged contents over 3 days
+    data=[]
+    data=merge(file1,data)
+    data=merge(file2,data)
+    data=merge(file3,data)
+    ## titles and authors with length 1000
+    titles=[]
+    authors=[]
+    [titles,authors]=cleanData(data)
+    
+    '''
+    keep posts with titles containing 'Trump' or 'Biden'
+    case sensitive 
+    '''
+
+    [titles,index]=filterData(titles,authors)
+    print(len(titles))
+
+
+
+
+    ## write to output
+    # with open(fileOut, 'w') as f:
+    #     for d in data:
+    #         json.dump(d, f)
+    #         f.write('\n')
+
+
+
+
+
+   
+
+
+if __name__ == "__main__":
+    main()
