@@ -62,22 +62,17 @@ def writeData(titles,authors,fileOut):
 
 
 def main():
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument('f1')
-    #parser.add_argument('f2')
-    #parser.add_argument('f3')    
-    #parser.add_argument('fileOut')
-    #args = parser.parse_args()
-    #file1=args.f1
-    #file2=args.f2
-    #file3=args.f3
-    #fileOut=args.fileOut
-    ############################## testing
+    parser = argparse.ArgumentParser()
+    parser.add_argument('f1')
+    parser.add_argument('f2')
+    parser.add_argument('f3')    
+    parser.add_argument('fileOut')
+    args = parser.parse_args()
+    file1=args.f1
+    file2=args.f2
+    file3=args.f3
+    fileOut=args.fileOut
 
-    file1='data/20201127_conservative.json'
-    file2='data/20201128_conservative.json'
-    file3='data/20201129_conservative.json'
-    fileOut='data/conservative_cleaned.csv'
 ############################################
 
     ## data = merged contents over 3 days
@@ -97,19 +92,7 @@ def main():
 
     [titles,authors]=filterData(titles,authors)
 
-
     writeData(titles,authors,fileOut)
-
-
-
-
-
-
-
-
-
-
-   
 
 
 if __name__ == "__main__":
