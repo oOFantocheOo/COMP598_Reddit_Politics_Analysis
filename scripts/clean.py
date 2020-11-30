@@ -3,13 +3,16 @@ import json
 import argparse
 import pandas as pd
 import random
+import subprocess
 
-def merge(file,data):    
+def merge(file,data,max):  
     f=open(file)
-    while True:
+    l=0
+    while (l<max):
         line=f.readline()
         try:
             data.append(json.loads(line))
+            l=l+1
 
         except Exception:
             pass
@@ -65,21 +68,24 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('f1')
     parser.add_argument('f2')
-    parser.add_argument('f3')    
+    parser.add_argument('f3')   
+    parser.add_argument('max') 
     parser.add_argument('fileOut')
     args = parser.parse_args()
     file1=args.f1
     file2=args.f2
     file3=args.f3
+    max=int(args.max) #trim all file to smalles line num
     fileOut=args.fileOut
 
 ############################################
 
     ## data = merged contents over 3 days
     data=[]
-    data=merge(file1,data)
-    data=merge(file2,data)
-    data=merge(file3,data)
+
+    data=merge(file1,data,max)
+    data=merge(file2,data,max)
+    data=merge(file3,data,max)
     ## titles and authors with length 1000
     titles=[]
     authors=[]
@@ -93,6 +99,17 @@ def main():
     [titles,authors]=filterData(titles,authors)
 
     writeData(titles,authors,fileOut)
+
+
+
+
+
+
+
+
+
+
+   
 
 
 if __name__ == "__main__":
