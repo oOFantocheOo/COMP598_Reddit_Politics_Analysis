@@ -40,11 +40,17 @@ for i, row in df_p.iterrows():
             counter_p[coding] += 1
 
 print('In conservative')
-for k in counter_c.keys():
-    print(f'{k}: {counter_c[k] / sum_c}')
+for k in valid_codings:
+    print(f'{k}: {round(counter_c[k] / sum_c, 3)}')
 
 print()
 
 print('In politics')
-for k in counter_p.keys():
-    print(f'{k}: {counter_p[k] / sum_p}')
+for k in valid_codings:
+    print(f'{k}: {round(counter_p[k] / sum_p, 3)}')
+
+print()
+
+print('Overall')
+for k in valid_codings:
+    print(f'{k}: {round((counter_c[k] + counter_p[k]) / (sum_c + sum_p), 3)}')
